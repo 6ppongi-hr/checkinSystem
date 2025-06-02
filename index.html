@@ -6,7 +6,8 @@
   <style>
     body {
       background-color: #e0e0e0;
-      font-size: 24px;
+      font-size: 60px;
+      font-weight: bold;
       font-family: sans-serif;
       display: flex;
       justify-content: center;
@@ -19,15 +20,16 @@
     }
     .star {
       position: absolute;
-      width: 10px;
-      height: 10px;
-      background: yellow;
+      width: 15px;
+      height: 15px;
+      background: gold;
       border-radius: 50%;
       animation: twinkle 2s infinite;
+      pointer-events: none;
     }
     @keyframes twinkle {
       0%, 100% { opacity: 0; transform: scale(1); }
-      50% { opacity: 1; transform: scale(1.5); }
+      50% { opacity: 1; transform: scale(1.8); }
     }
   </style>
 </head>
@@ -44,7 +46,7 @@
       document.body.appendChild(star);
       setTimeout(() => document.body.removeChild(star), 2000);
     }
-    setInterval(createStar, 200);
+    setInterval(createStar, 150);
 
     // 取得 URL 參數
     function getQueryParam(name) {
@@ -54,22 +56,6 @@
 
     const nfcid = getQueryParam("nfcid");
 
-    // 計算距離（如果需要）
-    function getDistance(lat1, lon1, lat2, lon2) {
-      function toRad(d) {
-        return d * Math.PI / 180;
-      }
-      const R = 6371000;
-      const dLat = toRad(lat2 - lat1);
-      const dLon = toRad(lon2 - lon1);
-      const a = Math.sin(dLat / 2) ** 2 +
-                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
-                Math.sin(dLon / 2) ** 2;
-      const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-      return R * c;
-    }
-
-    // 定位並送出打卡資料
     navigator.geolocation.getCurrentPosition(async pos => {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
@@ -91,15 +77,15 @@
 
         document.body.innerHTML = `
           <p>${errorMessage || '✅ 打卡成功！'}</p>
-          <p>姓名：${name}</p>
-          <p>時間：${time}</p>
-          <p>狀態：${status}</p>
+          <p>👤 姓名：${name}</p>
+          <p>🕒 時間：${time}</p>
+          <p>📌 狀態：${status}</p>
         `;
       } catch (err) {
-        document.body.innerHTML = `<p style="color: red;">錯誤：${err.message}</p>`;
+        document.body.innerHTML = `<p style="color: red;">❌ 錯誤：${err.message}</p>`;
       }
     }, err => {
-      document.body.innerHTML = `<p style="color: red;">無法取得定位：${err.message}</p>`;
+      document.body.innerHTML = `<p style="color: red;">❌ 無法取得定位：${err.message}</p>`;
     }, {
       enableHighAccuracy: true,
       timeout: 10000
