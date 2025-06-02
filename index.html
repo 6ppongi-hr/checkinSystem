@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-TW">
 <head>
   <meta charset="UTF-8">
   <title>打卡處理中...</title>
@@ -7,12 +7,27 @@
     body {
       background-color: #e0e0e0;
       font-size: 24px;
+      font-family: sans-serif;
       display: flex;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
       flex-direction: column;
+      text-align: center;
+      overflow: hidden;
+    }
+    .star {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      background: yellow;
+      border-radius: 50%;
+      animation: twinkle 2s infinite;
+    }
+    @keyframes twinkle {
+      0%, 100% { opacity: 0; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.5); }
     }
   </style>
 </head>
@@ -20,7 +35,18 @@
   <p>資料處理中，請稍候...</p>
 
   <script>
-    // 取得 query string 中的參數
+    // 星星動畫效果
+    function createStar() {
+      const star = document.createElement("div");
+      star.className = "star";
+      star.style.left = Math.random() * window.innerWidth + "px";
+      star.style.top = Math.random() * window.innerHeight + "px";
+      document.body.appendChild(star);
+      setTimeout(() => document.body.removeChild(star), 2000);
+    }
+    setInterval(createStar, 200);
+
+    // 取得 URL 參數
     function getQueryParam(name) {
       const urlParams = new URLSearchParams(window.location.search);
       return urlParams.get(name) || "";
@@ -28,7 +54,7 @@
 
     const nfcid = getQueryParam("nfcid");
 
-    // 計算距離（公尺）
+    // 計算距離（如果需要）
     function getDistance(lat1, lon1, lat2, lon2) {
       function toRad(d) {
         return d * Math.PI / 180;
@@ -43,6 +69,7 @@
       return R * c;
     }
 
+    // 定位並送出打卡資料
     navigator.geolocation.getCurrentPosition(async pos => {
       const lat = pos.coords.latitude;
       const lon = pos.coords.longitude;
@@ -63,7 +90,7 @@
         const { name, time, status, errorMessage } = json;
 
         document.body.innerHTML = `
-          <p>${errorMessage || '打卡成功！'}</p>
+          <p>${errorMessage || '✅ 打卡成功！'}</p>
           <p>姓名：${name}</p>
           <p>時間：${time}</p>
           <p>狀態：${status}</p>
