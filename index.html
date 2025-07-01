@@ -76,10 +76,17 @@
         const { name, time, status, errorMessage } = json;
 
         document.body.innerHTML = `
-          <p>${errorMessage || '✅ 打卡成功！'}</p>
-          <p>👤 姓名：${name}</p>
-          <p>🕒 時間：${time}</p>
-          <p>📌 狀態：${status}</p>
+  <p>${errorMessage || '✅ 打卡成功！'}</p>
+  <p>👤 姓名：${name}</p>
+  <p>🕒 時間：${time}</p>
+  <p>📌 狀態：${status}</p>
+`;
+
+// 5秒後跳轉
+setTimeout(() => {
+  window.location.href = "https://example.com/blank.html"; // 請改成你自己的網址
+}, 5000);
+
         `;
       } catch (err) {
         document.body.innerHTML = `<p style="color: red;">❌ 錯誤：${err.message}</p>`;
